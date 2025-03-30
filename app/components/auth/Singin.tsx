@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useSignin } from "app/services/authService";
 
 export default function Signin({
     setView,
@@ -10,6 +11,8 @@ export default function Signin({
 }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const signIn = useSignin();
 
     return (
         <div className="flex flex-col gap-4 items-center justify-center h-screen">
@@ -22,7 +25,26 @@ export default function Signin({
                     priority
                     className="!w-120 !h-auto"
                 />
-                <form action="" className="flex flex-col gap-4 w-full px-8">
+                <form
+                    action=""
+                    className="flex flex-col gap-4 w-full px-8"
+                    onSubmit={(e) => {
+                        e.preventDefault();
+
+                        signIn.mutate(
+                            {
+                                email,
+                                password,
+                            },
+                            {
+                                onError: (error) => {
+                                    alert(
+                                        `로그인 중 오류가 발생했습니다: ${error.message}`
+                                    );
+                                },
+                            }
+                        );
+                    }}>
                     <input
                         type="email"
                         value={email}
@@ -39,8 +61,9 @@ export default function Signin({
                     />
                     <button
                         type="submit"
+                        disabled={signIn.isPending}
                         className="w-full mt-2 bg-[#29b6f6] text-white py-2  rounded-md">
-                        로그인
+                        {signIn.isPending ? "로그인 중..." : "로그인"}
                     </button>
                 </form>
             </div>

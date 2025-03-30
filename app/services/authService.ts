@@ -3,6 +3,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { createBrowserSupabaseClient } from "utils/supabase/client";
 
+const handleError = (error: Error) => {
+    console.error(error);
+    throw error;
+};
+
 // using react query
 
 export function useSignup() {
@@ -25,8 +30,33 @@ export function useSignup() {
             });
 
             if (error) {
-                console.error(error);
-                throw error;
+                handleError(error);
+            }
+
+            // 데이터 리턴 잊지 말기!
+            return data;
+        },
+    });
+}
+
+export function useSignin() {
+    const supabase = createBrowserSupabaseClient();
+
+    return useMutation({
+        mutationFn: async ({
+            email,
+            password,
+        }: {
+            email: string;
+            password: string;
+        }) => {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
+
+            if (error) {
+                handleError(error);
             }
 
             // 데이터 리턴 잊지 말기!

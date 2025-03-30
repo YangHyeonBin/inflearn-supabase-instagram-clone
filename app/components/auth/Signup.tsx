@@ -71,25 +71,7 @@ export default function Signup({
                             confirmationRequired
                         }
                         // 버튼 onClick이 아닌 form onSubmit으로 처리
-                        // onClick={(e) => {
-                        //     e.preventDefault();
-                        //     signUp.mutate(
-                        //         { email, password },
-                        //         {
-                        //             onSuccess: (data) => {
-                        //                 setConfirmationRequired(true);
-                        //                 alert(
-                        //                     "메일함에서 이메일 인증을 완료해주세요!"
-                        //                 );
-                        //             },
-                        //             onError: (error) => {
-                        //                 alert(
-                        //                     `회원가입 중 오류가 발생했습니다: ${error.message}`
-                        //                 );
-                        //             },
-                        //         }
-                        //     );
-                        // }}
+
                         className="w-full mt-2 bg-[#29b6f6] text-white py-2 rounded-md">
                         {/* 처리중일 때 로딩 아이콘 추가 */}
                         {signUp.isPending && (
