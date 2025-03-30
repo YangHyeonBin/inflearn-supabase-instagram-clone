@@ -39,6 +39,26 @@ export function useSignup() {
     });
 }
 
+export function useVerifyOtp() {
+    const supabase = createBrowserSupabaseClient();
+
+    return useMutation({
+        mutationFn: async ({ email, otp }: { email: string; otp: string }) => {
+            const { data, error } = await supabase.auth.verifyOtp({
+                type: "signup", // 왜 signup이지?
+                email,
+                token: otp,
+            });
+
+            if (error) {
+                handleError(error);
+            }
+
+            return data;
+        },
+    });
+}
+
 export function useSignin() {
     const supabase = createBrowserSupabaseClient();
 
@@ -59,7 +79,6 @@ export function useSignin() {
                 handleError(error);
             }
 
-            // 데이터 리턴 잊지 말기!
             return data;
         },
     });
