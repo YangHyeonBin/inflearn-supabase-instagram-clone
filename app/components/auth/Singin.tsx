@@ -22,7 +22,7 @@ export default function Signin({
                     priority
                     className="!w-120 !h-auto"
                 />
-                <form action="" className="flex flex-col gap-4">
+                <form action="" className="flex flex-col gap-4 w-full px-8">
                     <input
                         type="email"
                         value={email}

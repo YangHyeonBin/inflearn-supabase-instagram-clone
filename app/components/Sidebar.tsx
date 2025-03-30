@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { createBrowserSupabaseClient } from "utils/supabase/client";
 
 export default function Sidebar() {
+    const supabase = createBrowserSupabaseClient();
+
     return (
         <aside className="h-screen w-fit p-6 border-r border-gray-300 flex flex-col justify-between">
             {/* home, peoople~chat */}
@@ -24,7 +27,7 @@ export default function Sidebar() {
 
             {/* logout button */}
             <div>
-                <button type="button">
+                <button type="button" onClick={() => supabase.auth.signOut()}>
                     <i className="fa-solid fa-right-from-bracket"></i>
                 </button>
             </div>

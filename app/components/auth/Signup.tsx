@@ -1,5 +1,6 @@
 "use client";
 
+import { useSignup } from "app/services/authService";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -10,6 +11,9 @@ export default function Signup({
 }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmationRequired, setConfirmationRequired] = useState(false);
+
+    const signUp = useSignup();
 
     return (
         <div className="flex flex-col gap-4 items-center justify-center h-screen">
@@ -22,7 +26,29 @@ export default function Signup({
                     priority
                     className="!w-120 !h-auto"
                 />
-                <form action="" className="flex flex-col gap-4">
+                <form
+                    action=""
+                    className="flex flex-col gap-4 w-full px-8"
+                    onSubmit={(e) => {
+                        e.preventDefault(); // 폼 제출 기본 동작(새로고침 등) 방지
+
+                        signUp.mutate(
+                            { email, password },
+                            {
+                                onSuccess: (data) => {
+                                    setConfirmationRequired(true);
+                                    alert(
+                                        "메일함에서 이메일 인증을 완료해주세요!"
+                                    );
+                                },
+                                onError: (error) => {
+                                    alert(
+                                        `회원가입 중 오류가 발생했습니다: ${error.message}`
+                                    );
+                                },
+                            }
+                        );
+                    }}>
                     <input
                         type="email"
                         value={email}
@@ -39,8 +65,39 @@ export default function Signup({
                     />
                     <button
                         type="submit"
+                        disabled={
+                            email === "" ||
+                            password === "" ||
+                            confirmationRequired
+                        }
+                        // 버튼 onClick이 아닌 form onSubmit으로 처리
+                        // onClick={(e) => {
+                        //     e.preventDefault();
+                        //     signUp.mutate(
+                        //         { email, password },
+                        //         {
+                        //             onSuccess: (data) => {
+                        //                 setConfirmationRequired(true);
+                        //                 alert(
+                        //                     "메일함에서 이메일 인증을 완료해주세요!"
+                        //                 );
+                        //             },
+                        //             onError: (error) => {
+                        //                 alert(
+                        //                     `회원가입 중 오류가 발생했습니다: ${error.message}`
+                        //                 );
+                        //             },
+                        //         }
+                        //     );
+                        // }}
                         className="w-full mt-2 bg-[#29b6f6] text-white py-2 rounded-md">
-                        가입하기
+                        {/* 처리중일 때 로딩 아이콘 추가 */}
+                        {signUp.isPending && (
+                            <i className="fa-solid fa-spinner animate-spin"></i>
+                        )}
+                        {confirmationRequired
+                            ? "메일함을 확인해주세요"
+                            : "가입하기"}
                     </button>
                 </form>
             </div>
