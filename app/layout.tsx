@@ -7,6 +7,7 @@ import MainLayout from "./components/layouts/MainLayout";
 import Auth from "./components/auth";
 import { createServerSupabaseClient } from "utils/supabase/server";
 import AuthProvider from "./config/authProvider";
+import JotaiProvider from "./config/JotaiProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,15 +36,17 @@ export default async function RootLayout({
                 />
             </head>
             <body className={inter.className}>
-                <ReactQueryProvider>
-                    <AuthProvider accessToken={accessToken ?? null}>
-                        {loggedIn ? (
-                            <MainLayout>{children}</MainLayout>
-                        ) : (
-                            <Auth />
-                        )}
-                    </AuthProvider>
-                </ReactQueryProvider>
+                <JotaiProvider>
+                    <ReactQueryProvider>
+                        <AuthProvider accessToken={accessToken ?? null}>
+                            {loggedIn ? (
+                                <MainLayout>{children}</MainLayout>
+                            ) : (
+                                <Auth />
+                            )}
+                        </AuthProvider>
+                    </ReactQueryProvider>
+                </JotaiProvider>
             </body>
         </html>
     );
