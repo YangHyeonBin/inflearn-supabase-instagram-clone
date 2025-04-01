@@ -6,6 +6,7 @@ import {
     selectedUserIdAtom,
     selectedUserIndexAtom,
     userAtom,
+    presenceStateAtom,
 } from "utils/jotai/atoms";
 import { useEffect, useRef, useState } from "react";
 import { useGetMessages, useSendMessage } from "app/services/useChatQueries";
@@ -17,6 +18,8 @@ export default function ChatScreen() {
 
     const [selectedUserId, _] = useAtom(selectedUserIdAtom);
     const [selectedUserIndex, __] = useAtom(selectedUserIndexAtom);
+    const [presenceState, setPresenceState] = useAtom(presenceStateAtom);
+
     const { data: opponentUser } = useGetUserById(selectedUserId);
 
     const sendMessage = useSendMessage();
@@ -34,7 +37,7 @@ export default function ChatScreen() {
             .on(
                 "postgres_changes",
                 {
-                    event: "INSERT",
+                    event: "*",
                     schema: "public",
                     table: "message",
                     // filter: `sender.eq.${selectedUserId}.and.receiver.eq.${currentUser?.id}`,
@@ -77,7 +80,9 @@ export default function ChatScreen() {
                                     "."
                                 )[0] || ""
                             }
-                            onlineAt={new Date().toISOString()}
+                            onlineAt={
+                                presenceState?.[selectedUserId]?.[0]?.onlineAt // 형태가 배열이라서
+                            }
                             isActive={false}
                             isChatScreen={true}
                         />

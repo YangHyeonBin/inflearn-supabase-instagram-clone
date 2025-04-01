@@ -33,10 +33,9 @@ export async function sendMessage({
 
 export async function getMessages({ opponentId }: { opponentId: string }) {
     const supabase = createBrowserSupabaseClient();
-    const { data: session, error: sessionError } =
-        await supabase.auth.getSession();
+    const { data: user, error: userError } = await supabase.auth.getUser();
 
-    if (sessionError || !session?.session?.user) {
+    if (userError || !user?.user) {
         throw new Error("User is not authenticated");
     }
 
@@ -45,8 +44,8 @@ export async function getMessages({ opponentId }: { opponentId: string }) {
         .select("*")
         // 보낸 사람이 현재 유저 또는 상대방,
         // 받는 사람이 현재 유저 또는 상대방인 것 즉 현재 채팅방에서 현재 유저와 상대방이 주고받은 모든 메시지
-        .or(`sender.eq.${session.session.user.id}, sender.eq.${opponentId}`)
-        .or(`receiver.eq.${session.session.user.id}, receiver.eq.${opponentId}`)
+        .or(`sender.eq.${user.user.id}, sender.eq.${opponentId}`)
+        .or(`receiver.eq.${user.user.id}, receiver.eq.${opponentId}`)
         .order("created_at", { ascending: true });
 
     if (error) {

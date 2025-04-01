@@ -17,7 +17,7 @@ export default function Person({
     index: number;
     userId: string;
     name: string;
-    onlineAt: string;
+    onlineAt?: string;
     isActive: boolean;
     isChatScreen: boolean;
     onClick?: () => void;
@@ -38,7 +38,9 @@ export default function Person({
             const TimeAgo = module.default;
             TimeAgo.addLocale(ko);
             const timeAgo = new TimeAgo("ko-KR");
-            setFormattedTime(timeAgo.format(new Date(onlineAt)));
+            setFormattedTime(
+                onlineAt ? timeAgo.format(new Date(onlineAt)) : ""
+            );
         });
     }, [onlineAt]);
 
