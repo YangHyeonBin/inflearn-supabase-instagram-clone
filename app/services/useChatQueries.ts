@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getMessages, sendMessage } from "actions/chatActions";
+import { getMessages, sendMessage } from "./chatService";
 
 export function useGetMessages({ opponentId }: { opponentId: string }) {
     return useQuery({
